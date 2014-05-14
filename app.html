@@ -12,8 +12,8 @@
     <form name="userForm" role="form">
       <label for="username">GitHub username: </label>
       <input type="text" name="username" data-ng-model="username" required />
-      <button data-ng-click="lookupUser(userForm)" class="btn btn-default">Submit</button>
-      <span class="label label-danger" data-ng-show="submitted && userForm.username.$error.required">Required!</span>
+      <button data-ng-click="lookupUser(userForm)">Submit</button>
+      <span data-ng-show="submitted && userForm.username.$error.required">Required!</span>
 
     </form>
     <br/>
