@@ -8,32 +8,44 @@
 
 <body ng-app="myapp">
 
-  <div ng-controller="MyController" >
-    <button ng-click="myData.doClick(item, $event)">Send AJAX Request</button>
+  <div data-ng-controller="UserLookup" >
+    <form name="userForm" role="form">
+      <label for="username">GitHub username: </label>
+      <input type="text" name="username" data-ng-model="username" required />
+      <button data-ng-click="lookupUser(userForm)" class="btn btn-default">Submit</button>
+      <span class="label label-danger" data-ng-show="submitted && userForm.username.$error.required">Required!</span>
+
+    </form>
     <br/>
-    Data from server: {{myData.res}}
+    Data from server: {{repoData.res}}
   </div>
 
   <script>
     angular.module("myapp", [])
-        .controller("MyController", function($scope, $http) {
-            $scope.myData = {};
-            $scope.req = {}
-            $scope.req.user = "damc-dev";
-            $scope.myData.doClick = function(item, event) {
+        .controller("UserLookup", function($scope, $http) {
+            $scope.repoData = {};
+            $scope.req = {};
+            $scope.username = "damc-dev";
 
-                var responsePromise = $http.get("https://api.github.com/users/" + $scope.req.user + "/repos");
+            $scope.lookupUser = function(form) {
+              console.log(form);
+              $scope.submitted = true;
 
-                responsePromise.success(function(data, status, headers, config) {
-                    console.log(data);
-                    $scope.myData.res = data;
-                });
-                responsePromise.error(function(data, status, headers, config) {
-                    console.error("Error: AJAX request failed.");
-                });
-            }
+              if(form.$invalid){
+                return;
+              }
+              $scope.req.username = $scope.username;
 
+              var responsePromise = $http.get("https://api.github.com/users/" + $scope.req.username + "/repos");
 
+              responsePromise.success(function(data, status, headers, config) {
+                console.log(data);
+                $scope.repoData.res = data;
+              });
+              responsePromise.error(function(data, status, headers, config) {
+                console.error("Error: AJAX request failed.");
+              });
+            };
         } );
   </script>
 
